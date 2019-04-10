@@ -69,23 +69,26 @@ bool GetAllFilesFromFolder(const fs::path& sourceFolder, bool recursively, fileV
 	current /= _T("*");
 	
 	WIN32_FIND_DATA FindFileData;
-
-	HANDLE hFind = FindFirstFile(current.c_str(), &FindFileData);
-	if (hFind == INVALID_HANDLE_VALUE)
-		return false;
-	do
+	HANDLE hFind;
+	if (recursively)
 	{
-		if (IsDots(&FindFileData))
-			continue;
-
-		if (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+		hFind = FindFirstFile(current.c_str(), &FindFileData);
+		if (hFind == INVALID_HANDLE_VALUE)
+			return false;
+		do
 		{
-			if (recursively)
-				GetAllFilesFromFolder(fs::path(sourceFolder) /= fs::path(FindFileData.cFileName), recursively, files, maskVector);
-		}
+			if (IsDots(&FindFileData))
+				continue;
 
-	} while (FindNextFile(hFind, &FindFileData));
-	FindClose(hFind);
+			if (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+			{
+				if (recursively)
+					GetAllFilesFromFolder(fs::path(sourceFolder) /= fs::path(FindFileData.cFileName), recursively, files, maskVector);
+			}
+
+		} while (FindNextFile(hFind, &FindFileData));
+		FindClose(hFind);
+	}
 
 	if(maskVector.empty())
 	{
@@ -99,7 +102,7 @@ bool GetAllFilesFromFolder(const fs::path& sourceFolder, bool recursively, fileV
 		current /= (*mask);
 		hFind = FindFirstFile(current.c_str(), &FindFileData);
 		if (hFind == INVALID_HANDLE_VALUE)
-			return false;
+			continue;
 		do
 		{
 			if (IsDots(&FindFileData))

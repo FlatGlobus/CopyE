@@ -9,11 +9,6 @@ CCopy::~CCopy()
 {
 }
 //////////////////////////////////////////////////////////////////////////
-//void CCopy::SetSource(fileVector& source)
-// {
-// 	src = source;
-// }
-//////////////////////////////////////////////////////////////////////////
 void CCopy::SetDestination(const fs::path& destination)
 {
 	dst = destination;
@@ -90,7 +85,7 @@ bool CCopy::Process()
  						std::wcout << _T("Copy ") << *k << " to " << *j << std::endl;
  
  						SetFileAttributes(j->c_str(),GetFileAttributes(j->c_str()) & ~FILE_ATTRIBUTE_READONLY);
- 						if (CopyFile(k->c_str(), j->c_str(), false) == false)
+ 						if (CopyFile(k->c_str(), j->c_str(), FALSE) == FALSE)
  						{
  							std::wcout << _T("Error: ") << GetLastErrorStr();
  							continue;
