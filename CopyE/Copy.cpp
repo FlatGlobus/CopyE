@@ -67,7 +67,7 @@ bool CCopy::Process()
             fs::path src_file((*i));
             if (!fs::is_regular_file(src_file, e))
             {
-                PrintError(e);
+                e.clear();
                 src_file = src_file.parent_path();
                 if (src_file.empty() == true)
                     src_file = fs::current_path(e);
@@ -78,7 +78,7 @@ bool CCopy::Process()
             {
                 src_list.push_back(FileData(*i, false));
             }
-            PrintError(e);
+
             for (auto k = src_list.begin(); k != src_list.end(); k++)
             {
                 fileDataVector targetFiles;
@@ -149,11 +149,16 @@ bool CCopy::CheckFilesForCopy(const FileData & s, const FileData & d)
 
 void CCopy::MakeMaskVector()
 {
-    mask.empty();
+     mask.empty();
 
     for (auto i = src.begin(); i != src.end(); i++)
     {
-        mask.push_back((*i).filename());
+        std::wstring msk = i->filename();
+        if(msk.size())
+            mask.push_back(msk);
     }
+
+    if(mask.size() == 0)
+        mask.push_back(_T("*"));
 }
 

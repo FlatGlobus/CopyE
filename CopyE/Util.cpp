@@ -50,7 +50,9 @@ bool IsDots(WIN32_FIND_DATA* pFindData)
 bool GetAllFilesFromFolder(const fs::path& sourceFolder, bool recursively, fileDataVector& files, std::wstring& mask)
 {
     stringVector maskVector;
-    maskVector.push_back(mask);
+    if(mask.size())
+        maskVector.push_back(mask);
+    
     return GetAllFilesFromFolder(sourceFolder, recursively, files, maskVector);
 }
 
@@ -137,3 +139,4 @@ void SetArchived(const fs::path& p, bool flag)
 
     SetFileAttributes(p.c_str(), attr_flags);
 }
+
