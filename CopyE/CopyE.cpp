@@ -19,6 +19,7 @@ int wmain(int argc, TCHAR* argv[])
 			("source,s", po::wvalue<std::vector<wstring>>()->multitoken(), "source files/masks *.txt c:\\te??t.cpp")
 			("destination,d", po::wvalue<wstring>(), "destination path c:\\temp")
 			("recursive,r", po::wvalue<wstring>(), "recursive source|destination sd")
+			("modified,m", "copy modified files only")
 			;
 
 		po::variables_map vm;
@@ -64,6 +65,11 @@ int wmain(int argc, TCHAR* argv[])
 			{
 				recursiveDestination = true;
 			}
+		}
+		
+		if (vm.count("modified"))
+		{
+			copy.SetModifiedOnly(true);
 		}
 
 		copy.SetDestination(vm["destination"].as<wstring>());
