@@ -33,7 +33,7 @@ bool CCopy::CheckDir()
 
     if (ret == false)
     {
-        std::wcout << _T("Error: Path \"") << dst << _T("\" doesn't exist.") << std::endl;
+        std::wcout << _T("Error: Path \"") << dst.c_str() << _T("\" doesn't exist.") << std::endl;
         return false;
     }
     return true;
@@ -43,7 +43,7 @@ bool CCopy::CollectFiles()
 {
     if (CheckDir())
     {
-        std::wcout << _T("Collect files from ") << dst << std::endl;
+        std::wcout << _T("Collect files from ") << dst.c_str() << std::endl;
         GetAllFilesFromFolder(dst, d, dst_list, mask);
         std::wcout << dst_list.size() << _T(" files collected") << std::endl;
         return !dst_list.empty();
@@ -87,7 +87,7 @@ bool CCopy::Process()
                 {
                     for (auto j = targetFiles.begin(); j != targetFiles.end(); j++)
                     {
-                        std::wcout << _T("Copy ") << k->file << " to " << j->file << std::endl;
+                        std::wcout << _T("Copy ") << k->file.c_str() << " to " << j->file.c_str() << std::endl;
 
                         SetFileAttributes(j->file.c_str(), GetFileAttributes(j->file.c_str()) & ~FILE_ATTRIBUTE_READONLY);
                         if (CopyFile(k->file.c_str(), j->file.c_str(), FALSE) == FALSE)
